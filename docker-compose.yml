@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+
+  openvpn:
+    image: kylemanna/openvpn
+    container_name: openvpn
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - '1194:1194/udp'
+    volumes:
+      - /data/openvpn:/etc/openvpn
+
+  dnsmasq:
+    image: andyshinn/dnsmasq
+    container_name: dnsmasq
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - '53:53/tcp'
+      - '53:53/udp'
+    extra_hosts:
+      - 'host1:xxx.xxx.xxx'
+      - 'host2:yyy.yyy.yyy'
+    dns:
+      - 119.29.29.29
+      - 8.8.8.8
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      - PMA_HOSTS=xxx.mysql.rds.aliyuncs.com,yyy.mysql.rds.aliyuncs.com
+    ports:
+      - '8080:80'
+    volumes:
+      - /sessions
